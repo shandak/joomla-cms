@@ -256,10 +256,19 @@ class JSessionHandlerNative implements JSessionHandlerInterface
 			throw new RuntimeException(sprintf('Failed to start the session because headers have already been sent by "%s" at line %d.', $file, $line));
 		}
 
-		// Ok to try and start the session
-		if (!session_start())
+		try
 		{
-			throw new RuntimeException('Failed to start the session');
+			// Ok to try and start the session
+			if (!session_start())
+			{
+				throw new RuntimeException('Failed to start the session');
+			}
+		}
+		catch (Throwable $e)
+		{
+			echo $e->getTraceAsString() . PHP_EOL;
+			echo $e->getMessage()) . PHP_EOL;
+			exit(1);
 		}
 
 		// Mark ourselves as started
